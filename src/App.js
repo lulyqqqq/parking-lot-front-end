@@ -1,25 +1,19 @@
-import logo from './logo.svg';
 import './App.css';
+import {createContext, useReducer} from "react";
+import parkingLotReducer, {initialState} from "./context/ParkingLotContextReducer";
+import ParkingLot from "./component/ParkingLot";
+
+export const ParkingLotContext = createContext();
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [state, dispatch] = useReducer(parkingLotReducer, initialState);
+    return (
+        <div className="App">
+            <ParkingLotContext.Provider value={{state, dispatch}}>
+                <ParkingLot/>
+            </ParkingLotContext.Provider>
+        </div>
+    );
 }
 
 export default App;
