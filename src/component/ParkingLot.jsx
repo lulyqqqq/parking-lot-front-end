@@ -23,7 +23,8 @@ const ParkingLot = () => {
     }, [dispatch]);
 
     return (
-        <div>
+        <div style={{marginTop: '150px'}}>
+            <h1>ParkingLot2.0</h1>
             <ParkingOperation/>
             <ParkingLotGroup/>
         </div>

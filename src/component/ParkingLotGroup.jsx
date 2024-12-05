@@ -11,7 +11,7 @@ const ParkingLotGroup = () => {
     }
 
     return (
-        <div>
+        <div style={{display: 'flex', gap: '10px', justifyContent: 'center'}}>
             {parkingLots.map(parkingLot => (
                 <ParkingLotCar key={parkingLot.id} parkingLotData={parkingLot}/>
             ))}

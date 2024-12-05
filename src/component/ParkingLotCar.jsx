@@ -10,12 +10,14 @@ const ParkingLotCar = ({ parkingLotData }) => {
     });
 
     return (
-        <Card title={name} style={{ width: 300 }}>
-            {parkingSpots.map((plateNumber, index) => (
-                <div key={index} style={{ border: '1px solid black', padding: '10px', margin: '5px' }}>
-                    {plateNumber}
-                </div>
-            ))}
+        <Card title={name} style={{ width: 600}}>
+            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {parkingSpots.map((plateNumber, index) => (
+                    <div key={index} style={{ border: '1px solid black', padding: '10px', margin: '5px', width: '20%' }}>
+                        {plateNumber}
+                    </div>
+                ))}
+            </div>
         </Card>
     );
 };
