@@ -1,18 +1,14 @@
 import React, {useContext} from 'react';
 import {Button, Input, Modal, Select} from 'antd';
-import axios from 'axios';
 import {ParkingLotContext} from '../App';
 import {SET_PLATE_NUMBER, SET_STRATEGY, UPDATE_PARKING_LOT} from '../context/ParkingLotContextReducer';
+import {fetchCar, getParkingLots, parkCar} from "../api/parkingLot";
 
 const {Option} = Select;
 
 const ParkingOperation = () => {
     const {state, dispatch} = useContext(ParkingLotContext);
     const {plateNumber, strategy, parkingLots} = state;
-
-    const api = axios.create({
-        baseURL: 'http://localhost:8080'
-    });
 
 
     const handlePark = async () => {
@@ -23,19 +19,15 @@ const ParkingOperation = () => {
                     plateNumber,
                     parkingBoyType: strategy
                 };
-                const response = await api.post('/park', parkRequestData);
-                if (response.status === 200) {
-                    const {ticket} = response.data;
-                    dispatch({
-                        type: UPDATE_PARKING_LOT,
-                        payload: {parkingLotId: availableLot.id, ticket}
-                    });
-                }
-            } catch (error) {
-                console.error('Error parking car:', error);
+                const response = await parkCar(parkRequestData);
+                const {ticket} = response;
+                dispatch({
+                    type: UPDATE_PARKING_LOT,
+                    payload: {parkingLotId: availableLot.id, ticket}
+                });
             } finally {
                 dispatch({type: SET_PLATE_NUMBER, payload: ''});
-                await getParkingLots()
+                await getParkingLos()
             }
         }
     };
@@ -45,31 +37,25 @@ const ParkingOperation = () => {
             const fetchRequestData = {
                 plateNumber
             };
-            const response = await api.post('/fetch', fetchRequestData);
-            if (response.status === 200) {
-                const {plateNumber: carPlateNumber} = response.data;
-                const parkingLotId = parkingLots.find(lot => lot.tickets.some(ticket => ticket.plateNumber === carPlateNumber))?.id;
-                dispatch({
-                    type: UPDATE_PARKING_LOT,
-                    payload: {parkingLotId, ticket: null}
-                });
-            }
-        } catch (error) {
-            console.error('Error fetching car:', error);
+            const response = await fetchCar(fetchRequestData);
+            const {plateNumber: carPlateNumber} = response;
+            const parkingLotId = parkingLots.find(lot => lot.tickets.some(ticket => ticket.plateNumber === carPlateNumber))?.id;
+            dispatch({
+                type: UPDATE_PARKING_LOT,
+                payload: {parkingLotId, ticket: null}
+            });
+
         } finally {
             dispatch({type: SET_PLATE_NUMBER, payload: ''});
-            await getParkingLots()
+            await getParkingLos()
         }
     };
 
-    const getParkingLots = async () => {
-        try {
-            const response = await api.get('/parkinglots');
-            dispatch({type: 'SET_PARKING_LOTS', payload: response.data});
-        } catch (error) {
-            console.error('Error fetching parking lots:', error);
-        }
+    const getParkingLos = async () => {
+        const response = await getParkingLots()
+        dispatch({type: 'SET_PARKING_LOTS', payload: response});
     }
+
     return (
         <div>
             <span>请输入车牌号: </span>

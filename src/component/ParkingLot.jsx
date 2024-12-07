@@ -1,25 +1,22 @@
 import React, {useContext, useEffect} from 'react';
-import axios from 'axios';
 import ParkingOperation from './ParkingOperation';
 import ParkingLotGroup from './ParkingLotGroup';
 import {ParkingLotContext} from "../App";
+import {getParkingLots} from "../api/parkingLot";
 
 const ParkingLot = () => {
 
     const {dispatch} = useContext(ParkingLotContext);
 
     useEffect(() => {
-        axios.get('http://localhost:8080/parkinglots')
+        getParkingLots()
             .then(response => {
                 const action = {
                     type: 'SET_PARKING_LOTS',
-                    payload: response.data
+                    payload: response
                 };
                 dispatch(action);
             })
-            .catch(error => {
-                console.error('Error fetching parking lots:', error);
-            });
     }, [dispatch]);
 
     return (
