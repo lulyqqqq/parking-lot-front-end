@@ -60,3 +60,6 @@ list中的数据，请你根据描述生成对应的component和每个component�
 
 # 使用antd
 使用antd的组件库来完成UI的渲染
+
+# 使用axios封装
+我先现在需要将我每个component中与后端交互的axios请求封装到项目结构中的api parkingLot.js中
